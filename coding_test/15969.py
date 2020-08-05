@@ -1,0 +1,7 @@
+N = input()
+student_score = list(map(int, input().split(' ')))
+student_score.sort()
+max_num = student_score.pop()
+student_score.reverse()
+min_num = student_score.pop()
+print(max_num-min_num )

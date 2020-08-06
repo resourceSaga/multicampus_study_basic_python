@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Django Blog</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+</head>
+<body>
+<div class="page-header">
+    <a href="{% url 'post_new' %}" class="top-menu">
+        <span class="glyphicon glyphicon-plus"></span></a>
+    <h1><a href="/"> Blog List</a></h1>
+</div>
+
+<div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+        </div> <!-- col-md-8 end -->
+    </div> <!-- row end-->
+</div> <!-- content container end -->
+
+{% comment "Optional note" %}
+Server comment
+{% endcomment %}
+
+<!-- html client comment -->
+</body>
+</html>

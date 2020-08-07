@@ -3,18 +3,53 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Post
+from .models import Comment
 from .forms import PostModelForm
 from .forms import PostForm
+from .forms import CommentModelForm
 
-# Post 삭제
-def post_remove(request, pk):
+# Comment 승인
+@login_required
+def comment_approve(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    comment.approve()
+    return redirect('post_detail', pk=comment.post.pk)
+
+# Comment 삭제
+@login_required
+def comment_remove(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    post_pk = comment.post.pk
+    comment.delete()
+    return redirect('post_detail', pk=post_pk)
+
+# Comment add
+@login_required
+def add_comment_to_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    post.delete()
-    return redirect('post_list')
+    if request.method == 'POST':
+    # form obj create
+        form = CommentModelForm(request.POST)
+    # form valid check
+        if form.is_valid():
+            # author, text save to comment obj
+            comment = form.save(commit=False)
+            # comment obj matched post id save
+            comment.post = post
+            # save db
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentModelForm()
+    return render(request, 'blog/add_comment_to_post.html', {'form':form})
+
 
 # Post 수정
+@login_required
 def post_edit(request, pk):
     # DB에서 해당 pk와 매칭되는 Post 객체를 가져온다.
     post = get_object_or_404(Post, pk=pk)
@@ -32,7 +67,18 @@ def post_edit(request, pk):
         form = PostModelForm(instance=post)
     return render(request, 'blog/post_edit.html', {'form':form})
 
+
+# Post 삭제
+@login_required
+def post_remove(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.delete()
+    return redirect('post_list')
+
+
+
 # Post 등록
+@login_required
 def post_new(request):
     if request.method == 'POST':
         # input Form data and save request
